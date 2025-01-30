@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { data, useNavigate, useParams } from 'react-router-dom';  
+import { useNavigate, useParams } from 'react-router-dom';  
 import './App.css';
 
 const SubmittedData = () => {
@@ -47,8 +47,8 @@ const SubmittedData = () => {
         <div className="submitted-data">
             <h1>Form Submitted Successfully!</h1>
             <div className="form-summary">
-                <p><strong>Full Name:</strong> {data.fullName}</p>
-                <p><strong>Date of Birth:</strong> {data.dob}</p>
+                <p><strong>Full Name:</strong> {formData.fullName}</p>
+                <p><strong>Date of Birth:</strong> {formData.dob}</p>
                 <p><strong>Gender:</strong> {formData.gender}</p>
                 <p><strong>Email ID:</strong> {formData.emailID}</p>
                 <p><strong>Phone Number:</strong> {formData.phoneNumber}</p>
