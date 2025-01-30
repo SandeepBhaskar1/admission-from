@@ -5,8 +5,14 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
+const FRONTEND_URI = process.env.FRONTEND_CLOUD_URI || process.env.FRONTEND_LOCAL_URI;
 
-app.use(cors());
+app.use(cors({
+    origin: FRONTEND_URI,
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
