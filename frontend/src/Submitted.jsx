@@ -22,13 +22,13 @@ const SubmittedData = () => {
                     throw new Error('Form data not found'); 
                 }
 
-                const data = await response.json();
-                console.log('Fetched data:', data); // Add this line to log the data you are receiving
+                const responseData = await response.json();
+                console.log('Fetched data:', responseData); // Log the response object
 
-                if (data) {
-                    setFormData(data);
+                if (responseData.success) {
+                    setFormData(responseData.data);  // Access the 'data' field here
                 } else {
-                    setError('No data returned');
+                    setError('No data found');
                 }
             } catch (error) {
                 setError(error.message);
