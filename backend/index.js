@@ -1,28 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');
 const mongoose = require('mongoose');
+const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT;
-const FRONTEND_URI = process.env.FRONTEND_LOCAL_URI || process.env.FRONTEND_CLOUD_URI;
 
-app.use(cors({
-    origin: FRONTEND_URI,
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-}));
-
-mongoose.connect(process.env.MONGO_URI) 
-    .then(() => {
-        console.log("Connected to MongoDB");
-    })
-    .catch((error) => {
-        console.log("Error connecting to MongoDB", error);
-    });
-
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -87,20 +71,8 @@ app.post("/submit", (req, res) => {
         });
 });
 
-app.get(`/submitted/:fullName/:emailID`, (req, res) => {
-    const { fullName, emailID } = req.params;   
-    Form.findOne({ fullName, emailID }) 
-        .then((form) => {
-            if (!form) {
-                return res.status(404).json({ message: 'No form found' });
-            }
-            res.status(200).json(form);  
-        })
-        .catch((error) => {
-            res.status(500).json({ message: "Error fetching form data", error });
-        });
-});
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log("Connected to MongoDB"))
+    .catch((err) => console.log("MongoDB connection error:", err));
 
-app.listen(PORT, () => {
-    console.log(`Server is listening on http://localhost:${PORT}`);
-});
+module.exports = app;
