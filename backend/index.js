@@ -9,7 +9,6 @@ const FRONTEND_URI = process.env.NODE_ENV === 'development'
   ? process.env.FRONTEND_CLOUD_URI 
   : process.env.FRONTEND_LOCAL_URI;
 
-// CORS configuration
 app.use(cors({
   origin: FRONTEND_URI,
   methods: ["GET", "POST", "OPTIONS"],
