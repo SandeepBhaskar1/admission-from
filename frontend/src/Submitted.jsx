@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './App.css';
 
-const BACKEND_URI = ["http://localhost:4292" || "https://admission-form-backend.vercel.app"]
+const BACKEND_URI = ["http://localhost:4292" || "https://admission-from-backend.vercel.app"]
 
 const SubmittedData = () => {
     const [formData, setFormData] = useState(null);
