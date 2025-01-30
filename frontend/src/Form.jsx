@@ -28,6 +28,8 @@ const Form = () => {
         });
     };
 
+    const BACKEND_URI = ["http://localhost:4292" || "https://admission-form-backend.vercel.app"]
+
     const handleSubmit = async (e) => {
         e.preventDefault();
     
@@ -41,7 +43,7 @@ const Form = () => {
         const urlEncodedData = new URLSearchParams(formData).toString();
     
         try {
-            const response = await fetch('http://localhost:4292/submit', {
+            const response = await fetch(`${BACKEND_URI}/submit`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
