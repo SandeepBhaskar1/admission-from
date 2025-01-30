@@ -49,17 +49,17 @@ const Form = () => {
             const response = await fetch(`${BACKEND_URI}/submit`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/json',
                 },
-                body: urlEncodedData,
+                body: JSON.stringify(formData),
             });
-    
+
             if (response.ok) {
                 const result = await response.json();
-                alert('Form Submitted Successfully!');
+                alert('Form Submitted Successfully!' || result.message);
                 navigate(`/submitted/${formData.fullName}/${formData.emailID}`);
             } else {
-                throw new Error('Something went wrong while submitting the form.');
+                throw new Error('Something went wrong while submitting the form.' || result.message);
             }
         } catch (error) {
             console.log('Error:', error);

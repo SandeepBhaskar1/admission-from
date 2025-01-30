@@ -59,32 +59,31 @@ try {
 }
 
 // Database Connection
+// Database connection function
 async function connectDB() {
-  try {
-    if (mongoose.connections[0].readyState) {
-      console.log('Using existing database connection');
-      return;
+    try {
+      if (mongoose.connections[0].readyState) {
+        return;
+      }
+  
+      const connectionOptions = {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+      };
+  
+      console.log('MongoDB URI:', process.env.MONGO_URI?.substring(0, 20) + '...'); // Log partial URI for security
+      await mongoose.connect(process.env.MONGO_URI, connectionOptions);
+      console.log('Successfully connected to MongoDB');
+    } catch (error) {
+      console.error('MongoDB connection error:', {
+        name: error.name,
+        message: error.message
+      });
+      throw error;
     }
-    
-    const opts = {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      bufferCommands: false,
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000,
-    };
-
-    console.log('Connecting to MongoDB...');
-    await mongoose.connect(process.env.MONGO_URI, opts);
-    console.log('Successfully connected to MongoDB');
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-    if (error.name === 'MongoTimeoutError') {
-      throw new Error('Database connection timed out - please try again');
-    }
-    throw error;
   }
-}
 
 // Routes
 app.get('/', (req, res) => {
