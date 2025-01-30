@@ -73,7 +73,6 @@ async function connectDB() {
         socketTimeoutMS: 45000,
       };
   
-      console.log('MongoDB URI:', process.env.MONGO_URI?.substring(0, 20) + '...'); // Log partial URI for security
       await mongoose.connect(process.env.MONGO_URI, connectionOptions);
       console.log('Successfully connected to MongoDB');
     } catch (error) {
@@ -92,18 +91,10 @@ app.get('/', (req, res) => {
 
 // Submit Form Route
 app.post("/submit", async (req, res) => {
-  console.log('Starting form submission process');
   try {
-    console.log('Attempting database connection');
     await connectDB();
-    console.log('Database connected successfully');
-    
-    console.log('Form data received:', req.body);
     const newForm = new Form(req.body);
-    
-    console.log('Saving form data');
     await newForm.save();
-    console.log('Form data saved successfully');
     
     res.status(200).json({ 
       success: true,

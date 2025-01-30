@@ -62,7 +62,6 @@ const Form = () => {
                 throw new Error('Something went wrong while submitting the form.' || result.message);
             }
         } catch (error) {
-            console.log('Error:', error);
             alert('Failed to submit the form. Please try again.' + error.message);
         }
     

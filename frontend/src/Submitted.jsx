@@ -15,7 +15,6 @@ const SubmittedData = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                console.log(`Fetching data for ${fullName} and ${emailID}`);
                 const response = await fetch(`${BACKEND_URI}/submitted/${fullName}/${emailID}`); 
 
                 if (!response.ok) {
@@ -23,10 +22,8 @@ const SubmittedData = () => {
                 }
 
                 const responseData = await response.json();
-                console.log('Fetched data:', responseData); // Log the response object
 
                 if (responseData.success) {
-                    setFormData(responseData.data);  // Access the 'data' field here
                 } else {
                     setError('No data found');
                 }
