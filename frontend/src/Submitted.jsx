@@ -9,16 +9,16 @@ const SubmittedData = () => {
     const { fullName, emailID } = useParams(); 
 
     const BACKEND_URI = process.env.NODE_ENV === 'development'
-    ? "http://localhost:4292" 
-    : "https://admission-from-backend.vercel.app"; 
+        ? "http://localhost:4292" 
+        : "https://admission-from-backend.vercel.app"; 
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`${BACKEND_URI}/${fullName}/${emailID}`); // API call to fetch form data
+                const response = await fetch(`${BACKEND_URI}/submitted/${fullName}/${emailID}`); 
 
                 if (!response.ok) {
-                    throw new Error('Form data not found');
+                    throw new Error('Form data not found'); 
                 }
 
                 const data = await response.json();
@@ -40,7 +40,7 @@ const SubmittedData = () => {
     }
 
     const handleAnotherForm = () => {
-        navigate('/'); // Navigate back to the form page
+        navigate('/'); 
     };
 
     return (
