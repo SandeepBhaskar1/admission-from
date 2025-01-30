@@ -5,20 +5,36 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const FRONTEND_URI = process.env.NODE_ENV === 'development' 
-  ? process.env.FRONTEND_LOCAL_URI 
-  : process.env.FRONTEND_CLOUD_URI;
+
+const allowedOrigins = [
+  'https://admission-from-frontend.vercel.app',
+  'https://admission-form-frontend.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
+// CORS Configuration
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  methods: ['GET', 'POST', 'OPTIONS'],
+  credentials: true,
+  optionsSuccessStatus: 200
+}));
 
 // Middleware
-app.use(cors({
-  origin: FRONTEND_URI,
-  methods: ["GET", "POST", "OPTIONS"],
-  credentials: true
-}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Schema
+// MongoDB Schema
 const formSchema = new mongoose.Schema({
   fullName: { type: String, required: true },
   dob: { type: String, required: true },
@@ -34,7 +50,7 @@ const formSchema = new mongoose.Schema({
   parentPhoneNo: { type: String, required: true },
 }, { timestamps: true });
 
-// Model
+// Initialize Model
 let Form;
 try {
   Form = mongoose.model('Form');
@@ -42,11 +58,11 @@ try {
   Form = mongoose.model('Form', formSchema);
 }
 
-// Database connection
+// Database Connection
 async function connectDB() {
   try {
     if (mongoose.connections[0].readyState) {
-      console.log('Using existing connection');
+      console.log('Using existing database connection');
       return;
     }
     
@@ -60,7 +76,7 @@ async function connectDB() {
 
     console.log('Connecting to MongoDB...');
     await mongoose.connect(process.env.MONGO_URI, opts);
-    console.log('Connected to MongoDB');
+    console.log('Successfully connected to MongoDB');
   } catch (error) {
     console.error('MongoDB connection error:', error);
     if (error.name === 'MongoTimeoutError') {
@@ -75,33 +91,41 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: "Server is running" });
 });
 
+// Submit Form Route
 app.post("/submit", async (req, res) => {
-  console.log('Starting form submission');
+  console.log('Starting form submission process');
   try {
-    console.log('Attempting DB connection');
+    console.log('Attempting database connection');
     await connectDB();
-    console.log('DB connected successfully');
+    console.log('Database connected successfully');
     
-    console.log('Creating new form');
+    console.log('Form data received:', req.body);
     const newForm = new Form(req.body);
-    console.log('Saving form');
-    await newForm.save();
-    console.log('Form saved successfully');
     
-    res.status(200).json({ message: "Form Submitted Successfully!" });
+    console.log('Saving form data');
+    await newForm.save();
+    console.log('Form data saved successfully');
+    
+    res.status(200).json({ 
+      success: true,
+      message: "Form Submitted Successfully!"
+    });
   } catch (error) {
-    console.error('Detailed error:', {
+    console.error('Form submission error:', {
       name: error.name,
       message: error.message,
       stack: error.stack
     });
+    
     res.status(500).json({ 
+      success: false,
       message: "Error in Submitting the Form", 
       error: error.message 
     });
   }
 });
 
+// Get Submitted Form Route
 app.get('/submitted/:fullName/:emailID', async (req, res) => {
   try {
     await connectDB();
@@ -110,17 +134,34 @@ app.get('/submitted/:fullName/:emailID', async (req, res) => {
     const form = await Form.findOne({ fullName, emailID });
     
     if (!form) {
-      return res.status(404).json({ message: 'Form not found' });
+      return res.status(404).json({ 
+        success: false,
+        message: 'Form not found' 
+      });
     }
     
-    res.status(200).json(form);
+    res.status(200).json({
+      success: true,
+      data: form
+    });
   } catch (error) {
     console.error('Error fetching form data:', error);
     res.status(500).json({ 
+      success: false,
       message: 'Error fetching form data', 
       error: error.message 
     });
   }
+});
+
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+  console.error('Global error handler:', err);
+  res.status(500).json({
+    success: false,
+    message: 'Internal server error',
+    error: err.message
+  });
 });
 
 // Start server only in development
