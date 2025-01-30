@@ -5,14 +5,14 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const FRONTEND_URI = process.env.FRONTEND_CLOUD_URI || process.env.FRONTEND_LOCAL_URI;
+const PORT = process.env.PORT
+const FRONTEND_URI = process.env.NODE_ENV === 'development'  ? process.env.FRONTEND_CLOUD_URI : process.env.FRONTEND_LOCAL_URI;
 
 app.use(cors({
-    origin: "https://admission-from-frontend.vercel.app",
+    origin: FRONTEND_URI,
     methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
 }));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -81,4 +81,8 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("Connected to MongoDB"))
     .catch((err) => console.log("MongoDB connection error:", err));
 
+    app.listen(this.prototype, () => {
+        console.log(`Server is running on port ${PORT}`);
+        
+    })
 module.exports = app;
