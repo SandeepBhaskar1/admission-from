@@ -28,7 +28,10 @@ const Form = () => {
         });
     };
 
-    const BACKEND_URI = ["https://admission-form-backend.vercel.app"]
+    const BACKEND_URI = process.env.NODE_ENV === 'development' 
+    ? "http://localhost:4292" 
+    : "https://admission-form-backend.vercel.app"; 
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
