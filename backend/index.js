@@ -8,7 +8,7 @@ const app = express();
 const FRONTEND_URI = process.env.FRONTEND_CLOUD_URI || process.env.FRONTEND_LOCAL_URI;
 
 app.use(cors({
-    origin: "https://admission-form-frontend.vercel.app",
+    origin: "https://admission-from-frontend.vercel.app",
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
