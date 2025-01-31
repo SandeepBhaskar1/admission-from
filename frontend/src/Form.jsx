@@ -32,6 +32,8 @@ const Form = () => {
     ? "http://localhost:4292" 
     : "https://admission-from-backend.vercel.app"; 
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -42,6 +44,8 @@ const Form = () => {
             alert('All Fields Required!');
             return; 
         }
+
+        isSubmitting(true);
     
         const urlEncodedData = new URLSearchParams(formData).toString();
     
@@ -63,6 +67,8 @@ const Form = () => {
             }
         } catch (error) {
             alert('Failed to submit the form. Please try again.' + error.message);
+        } finally {
+            isSubmitting(false);
         }
     
         setFormData({
@@ -217,7 +223,7 @@ const Form = () => {
                         autoComplete="tel"  
                     />
 
-                    <button type="submit">Submit</button>
+                    <button type="submit" disabled={isSubmitting}>{isSubmitting} ?'Submitting' : 'Submit'</button>
                 </form>
             </div>
         </div>
