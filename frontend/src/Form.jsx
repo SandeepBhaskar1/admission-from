@@ -68,7 +68,7 @@ const Form = () => {
         } catch (error) {
             alert('Failed to submit the form. Please try again.' + error.message);
         } finally {
-            isSubmitting(false);
+            setIsSubmitting(false);
         }
     
         setFormData({
