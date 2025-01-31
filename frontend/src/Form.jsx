@@ -223,7 +223,7 @@ const Form = () => {
                         autoComplete="tel"  
                     />
 
-                    <button type="submit" disabled={isSubmitting}>{isSubmitting} ?'Submitting' : 'Submit'</button>
+                    <button type="submit" disabled={isSubmitting}>{isSubmitting ?'Submitting' : 'Submit'}</button>
                 </form>
             </div>
         </div>
