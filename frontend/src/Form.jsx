@@ -45,7 +45,7 @@ const Form = () => {
             return; 
         }
 
-        isSubmitting(true);
+        setIsSubmitting(true);
     
         const urlEncodedData = new URLSearchParams(formData).toString();
     
