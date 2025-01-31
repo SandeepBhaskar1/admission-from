@@ -24,6 +24,7 @@ const SubmittedData = () => {
                 const responseData = await response.json();
 
                 if (responseData.success) {
+                    setFormData(responseData.data);
                 } else {
                     setError('No data found');
                 }

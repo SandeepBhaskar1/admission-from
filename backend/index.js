@@ -13,10 +13,8 @@ const allowedOrigins = [
   'http://localhost:3000'
 ];
 
-// CORS Configuration
 app.use(cors({
   origin: function(origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
     if (allowedOrigins.indexOf(origin) === -1) {
@@ -30,11 +28,9 @@ app.use(cors({
   optionsSuccessStatus: 200
 }));
 
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MongoDB Schema
 const formSchema = new mongoose.Schema({
   fullName: { type: String, required: true },
   dob: { type: String, required: true },
@@ -50,7 +46,6 @@ const formSchema = new mongoose.Schema({
   parentPhoneNo: { type: String, required: true },
 }, { timestamps: true });
 
-// Initialize Model
 let Form;
 try {
   Form = mongoose.model('Form');
@@ -58,8 +53,6 @@ try {
   Form = mongoose.model('Form', formSchema);
 }
 
-// Database Connection
-// Database connection function
 async function connectDB() {
     try {
       if (mongoose.connections[0].readyState) {
@@ -84,12 +77,10 @@ async function connectDB() {
     }
   }
 
-// Routes
 app.get('/', (req, res) => {
   res.status(200).json({ message: "Server is running" });
 });
 
-// Submit Form Route
 app.post("/submit", async (req, res) => {
   try {
     await connectDB();
@@ -115,7 +106,6 @@ app.post("/submit", async (req, res) => {
   }
 });
 
-// Get Submitted Form Route
 app.get('/submitted/:fullName/:emailID', async (req, res) => {
   try {
     await connectDB();
@@ -144,7 +134,6 @@ app.get('/submitted/:fullName/:emailID', async (req, res) => {
   }
 });
 
-// Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error('Global error handler:', err);
   res.status(500).json({
@@ -154,7 +143,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start server only in development
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
