@@ -44,7 +44,7 @@ const Form = () => {
             return; 
         }
 
-        // Disable submit button
+        // Disable submit button by setting isSubmitting to true
         setIsSubmitting(true);
 
         try {
@@ -64,12 +64,13 @@ const Form = () => {
                 throw new Error('Something went wrong while submitting the form.');
             }
         } catch (error) {
-            alert('Failed to submit the form. Please try again.' + error.message);
+            alert('Failed to submit the form. Please try again. ' + error.message);
         } finally {
-            // Enable submit button
+            // Ensure to set isSubmitting to false to re-enable the button
             setIsSubmitting(false);
         }
 
+        // Clear the form data after submission
         setFormData({
             fullName: '',
             dob: '',
