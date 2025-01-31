@@ -34,10 +34,9 @@ const Form = () => {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         if (!formData.fullName || !formData.dob || formData.gender === 'select' || !formData.emailID 
             || !formData.phoneNumber || formData.course === 'select' || !formData.collageStudied || !formData.gpa 
             || !formData.address || !formData.parentName || !formData.parentEmail || !formData.parentPhoneNo) {
@@ -45,10 +44,9 @@ const Form = () => {
             return; 
         }
 
+        // Disable submit button
         setIsSubmitting(true);
-    
-        const urlEncodedData = new URLSearchParams(formData).toString();
-    
+
         try {
             const response = await fetch(`${BACKEND_URI}/submit`, {
                 method: 'POST',
@@ -63,14 +61,15 @@ const Form = () => {
                 alert('Form Submitted Successfully!' || result.message);
                 navigate(`/submitted/${formData.fullName}/${formData.emailID}`);
             } else {
-                throw new Error('Something went wrong while submitting the form.' || result.message);
+                throw new Error('Something went wrong while submitting the form.');
             }
         } catch (error) {
             alert('Failed to submit the form. Please try again.' + error.message);
         } finally {
+            // Enable submit button
             setIsSubmitting(false);
         }
-    
+
         setFormData({
             fullName: '',
             dob: '',
@@ -223,7 +222,9 @@ const Form = () => {
                         autoComplete="tel"  
                     />
 
-                    <button type="submit" disabled={isSubmitting}>{isSubmitting ?'Submitting' : 'Submit'}</button>
+                    <button type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? 'Submitting...' : 'Submit'}
+                    </button>
                 </form>
             </div>
         </div>
